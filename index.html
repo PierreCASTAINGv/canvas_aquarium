@@ -1,0 +1,163 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <title>Canvas</title>
+    <meta charset="utf-8">
+    <style>
+
+        body {
+            background: rgb(31, 29, 29);
+        }
+
+        canvas {
+            margin-top: 5%;
+            margin-left: calc(50% - 491px);
+            background: url(./images/fd_marin.jpg) no-repeat;
+            box-shadow: 3px 4px 6px rgb(100, 100, 100);
+        }
+    </style>
+
+    <body>
+
+        <canvas></canvas>
+
+
+        <script>
+            // Canvas_Aquarium, réalisé avec les outils old_school (les fonctions)
+
+            // setup + initialisation du context2D de la balise canvas :
+
+            var myCanvas = document.querySelector('canvas');
+            myCanvas.width = 983;
+            myCanvas.height = 554;
+            ctx = myCanvas.getContext('2d');
+
+            // création du 1er poisson + sa méthode de déplacement :
+
+            function poissona(x, y, dx, dy) {
+                this.x = 0;
+                this.y = 70;
+                this.dx = 2.1;
+                this.dy = 0.7;
+                this.fisha = function () {
+                    var imag = new Image();
+                    imag.src = './images/fish4.png';
+                    ctx.drawImage(imag, this.x, this.y, 100, 84);
+                }
+
+                this.mova = function () {
+                    this.fisha();
+                    this.x += this.dx;
+                    this.y += this.dy;
+                }
+            }
+
+            // création du 2eme poisson + sa méthode de déplacement
+
+            function poissonb(x, y, dx, dy) {
+                this.x = 983;
+                this.y = 370;
+                this.dx = 1.5;
+                this.dy = 0.5;
+                this.fishb = function () {
+                    var imag = new Image();
+                    imag.src = './images/fish2.png';
+                    ctx.drawImage(imag, this.x, this.y, 100, 83);
+                }
+
+                this.movb = function () {
+                    this.fishb();
+                    this.x += -this.dx;
+                    this.y += -this.dy;
+                }
+            }
+
+            // création du 3eme poisson + sa méthode de déplacement :
+
+            function poissonc(x, y, dx, dy) {
+                this.x = 0;
+                this.y = 470;
+                this.dx = 1;
+                this.dy = 0.3;
+                this.fishc = function () {
+                    var imag = new Image();
+                    imag.src = './images/fish.png';
+                    ctx.drawImage(imag, this.x, this.y, 100, 67);
+                }
+
+                this.movc = function () {
+                    this.fishc();
+                    this.x += this.dx;
+                    this.y += -this.dy;
+                }
+            }
+
+            // création de l'effet bulles d'air + sa méthode de déplacement :
+
+            function bulles(x, y, dx, dy, radius) {
+                this.x = 550;
+                this.y = 545;
+                this.dx = dx;
+                this.dy = dy;
+                this.radius = radius;
+
+                this.dessin = function () {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                    ctx.fillStyle = Math.random() > 0.5 ? "blue" : Math.random() > 0.5 ? "yellow" : "red";
+                    ctx.fill();
+                }
+
+                this.move = function () {
+                    this.dessin();
+                    this.x += this.dx;
+                    this.y += -this.dy;
+                }
+            }
+
+
+            // Mise en tableaux des coordonnées et direction du déplacement de chacun des objets :
+
+            var cercleTab = [];
+            for (var i = 0; i < 500; i++) {
+                var x = 550;
+                var y = 545;
+                var dx = (Math.random() - 0.5);
+                var dy = (Math.random() - 0.5) * 8;
+                var radius = 4;
+                cercleTab.push(new bulles(x, y, dx, dy, radius));
+            }
+            var fishaTab = [];
+            fishaTab.push(new poissona(x, y, dx, dy));
+
+            var fishbTab = [];
+            fishbTab.push(new poissonb(x, y, dx, dy));
+
+            var fishcTab = [];
+            fishcTab.push(new poissonc(x, y, dx, dy));
+
+            function action() {
+                requestAnimationFrame(action);
+                ctx.clearRect(0, 0, 983, 554);
+
+                // mouvement des bulles
+
+                for (i = 0; c = cercleTab.length, i < c; i++) {
+                    cercleTab[i].move();
+                }
+
+                // mouvement des poissons
+
+                fishaTab[0].mova();
+                fishbTab[0].movb();
+                fishcTab[0].movc();
+            }
+
+            // lancer l'animation :
+            action();
+
+        </script>
+    </body>
+
+</html>
